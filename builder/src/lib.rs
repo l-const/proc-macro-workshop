@@ -49,39 +49,28 @@ pub fn derive(input: TokenStream) -> TokenStream {
     let option_idents: Vec<&proc_macro2::Ident> = option_map.borrow().keys().collect();
 
     let option_types: Vec<&syn::Type> = option_map.borrow().values().collect();
-    let mut map_with_option_types = map.clone();
     let orig_without_option: HashMap<proc_macro2::Ident, syn::Type> = map
         .into_iter()
-        .filter(|(i, t)| !option_map.contains_key(i))
+        .filter(|(i, _)| !option_map.contains_key(i))
         .collect();
     let orig_without_option_idents: Vec<&proc_macro2::Ident> =
         orig_without_option.borrow().keys().collect();
 
     let orig_without_option_types: Vec<&syn::Type> =
         orig_without_option.borrow().values().collect();
-    map_with_option_types.extend(option_map.clone().into_iter());
-    // Needed to correct the order of the fields to match according to how they were defined in the original struct definition
-    let complete_pairs: Vec<(&proc_macro2::Ident, &syn::Type)> = idents
-        .into_iter()
-        .map(|id| (id, map_with_option_types.get(id).unwrap()))
-        .collect();
-    let complete_idents: Vec<&proc_macro2::Ident> =
-        complete_pairs.iter().map(|(id, _)| *id).collect();
-    let complete_types: Vec<&syn::Type> = complete_pairs.iter().map(|(_, ty)| *ty).collect();
-
     // Create modified TokenStream
     let tokens = quote! {
         impl #struct_ident {
 
             pub fn builder() -> #builder_ident {
                  #builder_ident {
-                    #(#complete_idents  : Default::default()),*
+                    #(#idents  : Default::default()),*
                  }
             }
         }
 
         pub struct #builder_ident {
-            #(#complete_idents : #types),*
+            #(#idents : #types),*
         }
 
         impl #builder_ident {

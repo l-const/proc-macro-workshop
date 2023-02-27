@@ -8,7 +8,6 @@
 
 use derive_builder::Builder;
 
-
 #[derive(Builder)]
 pub struct Command {
     executable: String,
@@ -16,6 +15,5 @@ pub struct Command {
     env: Vec<String>,
     current_dir: Option<String>,
 }
-
 
 fn main() {}

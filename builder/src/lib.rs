@@ -58,7 +58,32 @@ pub fn derive(input: TokenStream) -> TokenStream {
 
     let orig_without_option_types: Vec<&syn::Type> =
         orig_without_option.borrow().values().collect();
-    // Create modified TokenStream
+    expand(
+        struct_ident,
+        &builder_ident,
+        idents,
+        types,
+        &orig_without_option_idents,
+        &orig_without_option_types,
+        &option_idents,
+        &option_types,
+    )
+}
+
+fn create_builder_ident(struct_ident: &Ident) -> Ident {
+    Ident::new(&format!("{}Builder", struct_ident), Span::call_site())
+}
+
+fn expand(
+    struct_ident: &Ident,
+    builder_ident: &Ident,
+    idents: &[Ident],
+    types: &[syn::Type],
+    orig_without_option_idents: &[&Ident],
+    orig_without_option_types: &[&syn::Type],
+    option_idents: &[&Ident],
+    option_types: &[&syn::Type],
+) -> TokenStream {
     let tokens = quote! {
         impl #struct_ident {
 
@@ -96,9 +121,7 @@ pub fn derive(input: TokenStream) -> TokenStream {
     proc_macro::TokenStream::from(tokens)
 }
 
-fn create_builder_ident(struct_ident: &Ident) -> Ident {
-    Ident::new(&format!("{}Builder", struct_ident), Span::call_site())
-}
+fn find_attribute_of_field() -> () {}
 
 fn find_optional_type(syn_type: &syn::Type) -> Option<syn::Type> {
     match syn_type {

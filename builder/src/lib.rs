@@ -175,34 +175,3 @@ fn parse_fields(derive_input: &DeriveInput) -> Result<ParsedFields, &'static str
         Err("Data type is not a struct")
     }
 }
-
-// fn find_optional_types<'a>(parsed_types: &'a ParsedFields) -> Option<ParsedFields> {
-//     let optional_parsed_types = parsed_types.types.iter().filter(|&&t| t.to_string().starts_with("Option<")).collect();
-//     if optional_parsed_types.types.len() > 0 {
-//         return Some(optional_parsed_types);
-//     }
-//     None
-// }
-
-// impl ParsedFields<'_> {
-//     fn iter(& self) -> impl Iterator<Item = (&& syn::Type, && proc_macro2::Ident)> {
-//       self.types.iter().zip(self.idents.iter())
-//     }
-// }
-
-// impl <'parse> IntoIterator for ParsedFields<'parse> {
-//     type Item = (&'parse syn::Type, &'parse proc_macro2::Ident);
-//     type IntoIter = std::iter::Zip<std::vec::IntoIter<&'parse syn::Type>,std::vec::IntoIter<&'parse proc_macro2::Ident>>;
-//     fn into_iter(self) -> Self::IntoIter {
-//         self.types.into_iter().zip(self.idents.into_iter())
-//     }
-// }
-
-// impl <'a> FromIterator<(&'a syn::Type, &'a proc_macro2::Ident)> for ParsedFields<'a> {
-//     fn from_iter<T: IntoIterator<Item = (&'a syn::Type, &'a proc_macro2::Ident)>>(iter: T) -> Self {
-//         let idents: Vec<_> = iter.into_iter().map(|(t, i)| i).collect();
-//         let types: Vec<_> = iter.into_iter().map(|(t, i)| t).collect();
-
-//         ParsedFields { idents,  types}
-//     }
-// }
